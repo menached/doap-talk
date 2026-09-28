@@ -41,23 +41,15 @@ class PlatformPermissionUtilImpl(private val context: Context) : PlatformPermiss
     override fun isFilesPermissionGranted(): Boolean =
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
-                if (
-                    PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_MEDIA_IMAGES)
-                    == PermissionChecker.PERMISSION_GRANTED ||
-                    PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_MEDIA_VIDEO)
-                    == PermissionChecker.PERMISSION_GRANTED ||
-                    PermissionChecker.checkSelfPermission(context, Manifest.permission.READ_MEDIA_AUDIO)
-                    == PermissionChecker.PERMISSION_GRANTED
-                ) {
-                    Log.d(TAG, "Permission is granted (SDK 33 or greater)")
-                    true
-                } else {
-                    Log.d(TAG, "Permission is revoked (SDK 33 or greater)")
-                    false
-                }
+                // Modern Android file/media selection uses scoped content
+                // URIs and does not require broad media-library access.
+                Log.d(TAG, "Broad media permission not required (SDK 33 or greater)")
+                true
             }
+
             Build.VERSION.SDK_INT > Build.VERSION_CODES.Q -> {
-                if (PermissionChecker.checkSelfPermission(
+                if (
+                    PermissionChecker.checkSelfPermission(
                         context,
                         Manifest.permission.READ_EXTERNAL_STORAGE
                     ) == PermissionChecker.PERMISSION_GRANTED
@@ -69,22 +61,23 @@ class PlatformPermissionUtilImpl(private val context: Context) : PlatformPermiss
                     false
                 }
             }
+
             else -> {
-                if (PermissionChecker.checkSelfPermission(
+                if (
+                    PermissionChecker.checkSelfPermission(
                         context,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
                     ) == PermissionChecker.PERMISSION_GRANTED
                 ) {
-                    Log.d(TAG, "Permission is granted")
+                    Log.d(TAG, "Permission is granted (SDK 29 or lower)")
                     true
                 } else {
-                    Log.d(TAG, "Permission is revoked")
+                    Log.d(TAG, "Permission is revoked (SDK 29 or lower)")
                     false
                 }
             }
         }
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun isPostNotificationsPermissionGranted(): Boolean =
         PermissionChecker.checkSelfPermission(
             context,

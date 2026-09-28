@@ -2452,14 +2452,10 @@ class ChatActivity :
 
     private fun requestReadFilesPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requestPermissions(
-                arrayOf(
-                    Manifest.permission.READ_MEDIA_IMAGES,
-                    Manifest.permission.READ_MEDIA_VIDEO,
-                    Manifest.permission.READ_MEDIA_AUDIO
-                ),
-                REQUEST_SHARE_FILE_PERMISSION
-            )
+            // Android's Storage Access Framework grants access to the
+            // URI selected by the user; broad media-library access is
+            // neither required nor appropriate here.
+            showLocalFilePicker()
         } else {
             requestPermissions(
                 arrayOf(
@@ -2689,7 +2685,10 @@ class ChatActivity :
                 error("Failed to get data from intent and uri")
             }
 
-            if (permissionUtil.isFilesPermissionGranted()) {
+            if (
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ||
+                permissionUtil.isFilesPermissionGranted()
+            ) {
                 showFileAttachmentPreview(filesToUpload)
             } else {
                 UploadAndShareFilesWorker.requestStoragePermission(this)
@@ -2841,7 +2840,9 @@ class ChatActivity :
     }
 
     fun sendSelectLocalFileIntent() {
-        if (!permissionUtil.isFilesPermissionGranted()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            showLocalFilePicker()
+        } else if (!permissionUtil.isFilesPermissionGranted()) {
             requestReadFilesPermissions()
         } else {
             showLocalFilePicker()

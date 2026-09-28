@@ -59,6 +59,14 @@ android {
     namespace = "com.nextcloud.talk"
 
     defaultConfig {
+        // Version presented to the Talk server for compatibility checks.
+        // All product flavors require this because ApiUtils references
+        // BuildConfig.TALK_COMPAT_VERSION.
+        buildConfigField(
+            "String",
+            "TALK_COMPAT_VERSION",
+            "\"25.1.0 Alpha 08\""
+        )
         testInstrumentationRunnerArguments["TEST_SERVER_URL"] =
             providers.gradleProperty("NC_TEST_SERVER_BASEURL").getOrElse("")
         testInstrumentationRunnerArguments["TEST_SERVER_USERNAME"] =
@@ -97,21 +105,19 @@ android {
             dimension = "default"
 
             // Keep Android ordering compatible with the upstream Talk codebase.
-            versionCode = 250010011
+            versionCode = 250010013
 
             // Human-visible DOAP release version.
             versionName = "0.1.2"
 
-            // Version presented to the Talk server for client compatibility.
-            buildConfigField(
-                "String",
-                "TALK_COMPAT_VERSION",
-                "\"25.1.0 Alpha 08\""
-            )
         }
         create("gplay") {
             applicationId = "com.nextcloud.talk2"
             dimension = "default"
+
+            // Google Play release numbering.
+            versionCode = 250010013
+            versionName = "0.1.2"
         }
         create("qa") {
             applicationId = "com.nextcloud.talk2.qa"

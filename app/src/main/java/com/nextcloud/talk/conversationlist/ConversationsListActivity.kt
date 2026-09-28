@@ -840,7 +840,10 @@ class ConversationsListActivity : BaseActivity() {
     }
 
     private fun showSendFilesConfirmDialog() {
-        if (platformPermissionUtil.isFilesPermissionGranted()) {
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU ||
+            platformPermissionUtil.isFilesPermissionGranted()
+        ) {
             if (isDirectShareTarget) {
                 // Skip the "Send this file to X?" confirmation: the user already picked this exact
                 // conversation directly from Android's share sheet, so re-confirming the target here

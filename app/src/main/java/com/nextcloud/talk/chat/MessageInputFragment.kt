@@ -566,7 +566,10 @@ class MessageInputFragment : Fragment() {
                         chatActivity.requestRecordAudioPermissions()
                         return@setOnTouchListener true
                     }
-                    if (!chatActivity.permissionUtil.isFilesPermissionGranted()) {
+                    if (
+                        Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU &&
+                        !chatActivity.permissionUtil.isFilesPermissionGranted()
+                    ) {
                         UploadAndShareFilesWorker.requestStoragePermission(chatActivity)
                         return@setOnTouchListener true
                     }
