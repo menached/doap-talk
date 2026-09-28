@@ -97,7 +97,7 @@ android {
             dimension = "default"
 
             // Keep Android ordering compatible with the upstream Talk codebase.
-            versionCode = 250010010
+            versionCode = 250010011
 
             // Human-visible DOAP release version.
             versionName = "0.1.2"
