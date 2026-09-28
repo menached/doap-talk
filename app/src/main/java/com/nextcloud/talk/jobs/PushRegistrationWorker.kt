@@ -394,7 +394,7 @@ class PushRegistrationWorker(context: Context, workerParams: WorkerParameters) :
                     Log.d(TAG, "Web push registration for ${user.userId} was already activated\n")
                     true
                 }
-                HTTP_CREATED -> {
+                HTTP_CREATED, HTTP_ACCEPTED -> {
                     Log.d(TAG, "Web push registration for ${user.userId} activated")
                     true
                 }
@@ -464,6 +464,7 @@ class PushRegistrationWorker(context: Context, workerParams: WorkerParameters) :
         const val UNREGISTER_WEBPUSH = "unregister_webpush"
         private const val HTTP_OK: Int = 200
         private const val HTTP_CREATED: Int = 201
+        private const val HTTP_ACCEPTED: Int = 202
 
         /**
          * If any of these actions are present when we observe the distributor is uninstalled,

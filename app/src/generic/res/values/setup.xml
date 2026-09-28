@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  DOAP Talk branding overrides.
+  Derived from Nextcloud Talk under GPL-3.0-or-later.
+-->
+<resources>
+    <string name="nc_app_name">DOAP Talk</string>
+    <string name="nc_app_product_name">DOAP Talk</string>
+    <string name="nc_server_product_name">DOAP Workspace</string>
+
+    <bool name="hide_provider">true</bool>
+    <bool name="multiaccount_support">false</bool>
+    <bool name="is_branded_client">true</bool>
+
+    <!-- A branded client with this set bypasses server selection. -->
+    <string name="weblogin_url" translatable="false">https://dmail.doap.com</string>
+
+    <!-- Do not expose Nextcloud-specific support/provider links as DOAP links. -->
+    <string name="nc_report_email" translatable="false"></string>
+    <string name="nc_privacy_url" translatable="false"></string>
+    <string name="nc_source_code_url" translatable="false"></string>
+    <string name="nc_talk_android_issues_url" translatable="false"></string>
+    <string name="nc_providers_url" translatable="false"></string>
+
+    <!-- Do not offer account import from the official Nextcloud Android app. -->
+    <string name="nc_import_accounts_from" translatable="false"></string>
+    <string name="nc_import_account_type" translatable="false"></string>
+</resources>

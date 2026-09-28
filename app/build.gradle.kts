@@ -8,6 +8,17 @@ import com.github.spotbugs.snom.Confidence
 import com.github.spotbugs.snom.Effort
 import com.github.spotbugs.snom.SpotBugsTask
 import io.gitlab.arturbosch.detekt.Detekt
+import java.util.Properties
+
+val doapSigningProperties = Properties()
+val doapSigningPropertiesFile =
+    file(System.getProperty("user.home") + "/.doap/android-signing/doap-talk-signing.properties")
+
+if (doapSigningPropertiesFile.exists()) {
+    doapSigningPropertiesFile.inputStream().use {
+        doapSigningProperties.load(it)
+    }
+}
 
 plugins {
     id("org.jetbrains.kotlin.plugin.compose") version "2.4.10"
@@ -61,7 +72,7 @@ android {
 
         // mayor.minor.hotfix.increment (for increment: 01-50=Alpha / 51-89=RC / 90-99=stable)
         // xx   .xxx  .xx    .xx
-        versionCode = 250010008
+        versionCode = 250010010
         versionName = "25.1.0 Alpha 08"
 
         vectorDrawables.useSupportLibrary = true
@@ -82,8 +93,21 @@ android {
     productFlavors {
         // used for f-droid
         create("generic") {
-            applicationId = "com.nextcloud.talk2"
+            applicationId = "com.doap.talk"
             dimension = "default"
+
+            // Keep Android ordering compatible with the upstream Talk codebase.
+            versionCode = 250010010
+
+            // Human-visible DOAP release version.
+            versionName = "0.1.2"
+
+            // Version presented to the Talk server for client compatibility.
+            buildConfigField(
+                "String",
+                "TALK_COMPAT_VERSION",
+                "\"25.1.0 Alpha 08\""
+            )
         }
         create("gplay") {
             applicationId = "com.nextcloud.talk2"
@@ -109,8 +133,20 @@ android {
         unitTests.isReturnDefaultValues = true
     }
 
+    signingConfigs {
+        create("doapRelease") {
+            if (doapSigningPropertiesFile.exists()) {
+                storeFile = file(doapSigningProperties["storeFile"] as String)
+                storePassword = doapSigningProperties["storePassword"] as String
+                keyAlias = doapSigningProperties["keyAlias"] as String
+                keyPassword = doapSigningProperties["keyPassword"] as String
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("doapRelease")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
